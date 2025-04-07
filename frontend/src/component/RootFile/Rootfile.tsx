@@ -7,7 +7,7 @@ import { Box } from "@mui/material";
 const Rootfile = () => {
   return (
     <>
-      <Header isLoggedIn={true} />
+      <Header />
       {/* <Box height={50} /> */}
       <Box sx={{ display: "flex" }}>
         <Box
