@@ -30,7 +30,7 @@ export const handleAuthentication = async (
   next: NextFunction
 ): Promise<void> => {
   const token: string | undefined =
-    req.header("x-token") || req.body.token || req.query.token;
+    req.header("x-token") || req.body?.token || req.query?.token;
 
   if (!token) {
     // req.user = null;
