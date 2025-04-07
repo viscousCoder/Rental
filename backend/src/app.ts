@@ -14,8 +14,8 @@ const app: Application = express();
 const port = 1234;
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    // origin: "https://rainbow-kitsune-0d972c.netlify.app",
+    // origin: "http://localhost:5173",
+    origin: "https://rental0.netlify.app",
     methods: ["PUT", "POST", "DELETE", "GET", "PATCH"],
     credentials: true,
   })
