@@ -1,277 +1,380 @@
-// import React from "react";
+// import React, { JSX, useState } from "react";
 // import {
 //   AppBar,
 //   Toolbar,
-//   Typography,
 //   IconButton,
-//   InputBase,
-//   Box,
+//   Typography,
 //   Menu,
 //   MenuItem,
-//   Avatar,
-//   Button,
 //   Drawer,
 //   List,
 //   ListItem,
 //   ListItemText,
-//   useTheme,
+//   Avatar,
+//   Box,
 //   useMediaQuery,
+//   useTheme,
 // } from "@mui/material";
 // import MenuIcon from "@mui/icons-material/Menu";
-// import SearchIcon from "@mui/icons-material/Search";
+// import HomeIcon from "@mui/icons-material/Home";
+// import ListIcon from "@mui/icons-material/List";
+// import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+// import BusinessIcon from "@mui/icons-material/Business";
+// import { useNavigate } from "react-router-dom";
 
-// const Header: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
-//   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-//   const [drawerOpen, setDrawerOpen] = React.useState(false);
-//   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+// const Header: React.FC = () => {
+//   const theme = useTheme();
+//   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+//   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+//   const [drawerOpen, setDrawerOpen] = useState(false);
+//   const navigate = useNavigate();
 
-//   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+//   const role = localStorage.getItem("role");
+
+// const menuItems: {
+//   label: string;
+//   icon: JSX.Element;
+//   path: string;
+//   roles: string[];
+// }[] = [
+//   {
+//     label: "Properties",
+//     icon: <HomeIcon />,
+//     path: "/",
+//     roles: ["Tenant", "Property Owner", "Admin"],
+//   },
+//   {
+//     label: "Property Listing",
+//     icon: <ListIcon />,
+//     path: "/property-listing",
+//     roles: ["Admin", "Property Owner"],
+//   },
+//   {
+//     label: "Booked Rooms",
+//     icon: <CalendarTodayIcon />,
+//     path: "/booked-rooms",
+//     roles: ["Tenant", "Admin"],
+//   },
+//   {
+//     label: "Listed Properties",
+//     icon: <BusinessIcon />,
+//     path: "/listedProperty",
+//     roles: ["Property Owner", "Admin"],
+//   },
+// ];
+
+//   const filteredMenu = menuItems.filter((item) =>
+//     item.roles.includes(role || "")
+//   );
+
+//   const handleProfileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 //     setAnchorEl(event.currentTarget);
 //   };
 
-//   const handleClose = () => setAnchorEl(null);
+//   const handleMenuClose = () => {
+//     setAnchorEl(null);
+//   };
 
-//   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+//   const handleLogout = () => {
+//     localStorage.clear();
+//     navigate("/login");
+//   };
+
+//   const renderMenuItems = () =>
+//     filteredMenu.map((item) => (
+//       <Box
+//         key={item.label}
+//         onClick={() => navigate(item.path)}
+//         sx={{ display: "flex", alignItems: "center", mx: 2, cursor: "pointer" }}
+//       >
+//         {item.icon}
+//         <Typography sx={{ ml: 1 }}>{item.label}</Typography>
+//       </Box>
+//     ));
 
 //   return (
-//     <AppBar
-//       position="static"
-//       color="default"
-//       sx={{ boxShadow: "none", borderBottom: "1px solid #ccc" }}
-//     >
-//       <Toolbar sx={{ justifyContent: "space-between" }}>
-//         {/* Left: Logo */}
-//         <Typography
-//           variant="h6"
-//           sx={{ fontWeight: "bold", color: "primary.main" }}
-//         >
-//           LOGO
-//         </Typography>
+//     <AppBar position="static" color="inherit" elevation={1}>
+//       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+//         {/* Logo */}
+//         <Box sx={{ display: "flex", alignItems: "center" }}>
+//           <Box sx={{ backgroundColor: "black", borderRadius: 2, p: 1, mr: 1 }}>
+//             <HomeIcon sx={{ color: "white" }} />
+//           </Box>
+//           <Box>
+//             <Typography variant="h6" sx={{ fontWeight: "bold", lineHeight: 1 }}>
+//               StayEase
+//             </Typography>
+//             <Typography variant="body2" color="text.secondary">
+//               Your Home Away From Home
+//             </Typography>
+//           </Box>
+//         </Box>
 
-//         {/* Middle: Search */}
+//         {/* Desktop Menu */}
 //         {!isMobile && (
-//           <Box
-//             sx={{
-//               display: "flex",
-//               alignItems: "center",
-//               bgcolor: "#f1f1f1",
-//               px: 1,
-//               borderRadius: 2,
-//             }}
-//           >
-//             <SearchIcon />
-//             <InputBase
-//               placeholder="Search properties..."
-//               sx={{ ml: 1, width: 200 }}
-//             />
+//           <Box sx={{ display: "flex", alignItems: "center" }}>
+//             {renderMenuItems()}
+//             <IconButton onClick={handleProfileClick} sx={{ ml: 2 }}>
+//               <Avatar src="/profile.jpg" />
+//             </IconButton>
+//             <Menu
+//               anchorEl={anchorEl}
+//               open={Boolean(anchorEl)}
+//               onClose={handleMenuClose}
+//             >
+//               <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
+//               <MenuItem onClick={handleLogout}>Logout</MenuItem>
+//             </Menu>
 //           </Box>
 //         )}
 
-//         {/* Right: Avatar / Sign In / Hamburger */}
-//         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-//           {isMobile && (
-//             <IconButton onClick={toggleDrawer}>
+//         {/* Mobile Menu */}
+//         {isMobile && (
+//           <>
+//             <IconButton onClick={() => setDrawerOpen(true)}>
 //               <MenuIcon />
 //             </IconButton>
-//           )}
-
-//           {isLoggedIn ? (
-//             <>
-//               <IconButton onClick={handleMenu}>
-//                 <Avatar alt="User" />
-//               </IconButton>
-//               <Menu
-//                 anchorEl={anchorEl}
-//                 open={Boolean(anchorEl)}
-//                 onClose={handleClose}
+//             <Drawer
+//               anchor="left"
+//               open={drawerOpen}
+//               onClose={() => setDrawerOpen(false)}
+//             >
+//               <Box
+//                 sx={{ width: 250 }}
+//                 role="presentation"
+//                 onClick={() => setDrawerOpen(false)}
 //               >
-//                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-//                 <MenuItem onClick={handleClose}>Logout</MenuItem>
-//               </Menu>
-//             </>
-//           ) : (
-//             <Button variant="contained" color="primary">
-//               Sign In
-//             </Button>
-//           )}
-//         </Box>
+//                 <List>
+//                   {filteredMenu.map((item) => (
+//                     <ListItem
+//                       key={item.label}
+//                       onClick={() => navigate(item.path)}
+//                     >
+//                       <item.icon.type sx={{ mr: 1 }} />
+//                       <ListItemText primary={item.label} />
+//                     </ListItem>
+//                   ))}
+//                   <ListItem onClick={() => navigate("/profile")}>
+//                     <ListItemText primary="Profile" />
+//                   </ListItem>
+//                   <ListItem onClick={handleLogout}>
+//                     <ListItemText primary="Logout" />
+//                   </ListItem>
+//                 </List>
+//               </Box>
+//             </Drawer>
+//           </>
+//         )}
 //       </Toolbar>
-
-//       {/* Mobile Drawer */}
-//       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-//         <List>
-//           {["Home", "Properties", "About", "Contact"].map((text) => (
-//             <ListItem key={text}>
-//               <ListItemText primary={text} />
-//             </ListItem>
-//           ))}
-//         </List>
-//       </Drawer>
 //     </AppBar>
 //   );
 // };
 
 // export default Header;
 
-import React from "react";
+import React, { JSX, useState } from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
-  InputBase,
-  Box,
+  Typography,
   Menu,
   MenuItem,
-  Avatar,
-  Button,
   Drawer,
   List,
-  ListItem,
   ListItemText,
-  useTheme,
+  Avatar,
+  Box,
   useMediaQuery,
-  Link as MuiLink,
+  useTheme,
+  ListItemButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
+import ListIcon from "@mui/icons-material/List";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import BusinessIcon from "@mui/icons-material/Business";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const navLinks = [
-  { text: "Home", path: "/" },
-  { text: "Properties", path: "/property-listing" },
-  { text: "Booked", path: "/booked" },
-  { text: "Listed Property", path: "/listedProperty" },
-];
-
-const Header: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+const Header: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const role = localStorage.getItem("role");
+
+  const menuItems: {
+    label: string;
+    icon: JSX.Element;
+    path: string;
+    roles: string[];
+  }[] = [
+    {
+      label: "Properties",
+      icon: <HomeIcon />,
+      path: "/",
+      roles: ["Tenant", "Property Owner", "Admin"],
+    },
+    {
+      label: "Property Listing",
+      icon: <ListIcon />,
+      path: "/property-listing",
+      roles: ["Admin", "Property Owner"],
+    },
+    {
+      label: "Booked Rooms",
+      icon: <CalendarTodayIcon />,
+      path: "/booked",
+      roles: ["Tenant", "Admin"],
+    },
+    {
+      label: "Listed Properties",
+      icon: <BusinessIcon />,
+      path: "/listedProperty",
+      roles: ["Property Owner", "Admin"],
+    },
+  ];
+
+  const filteredMenu = menuItems.filter((item) =>
+    item.roles.includes(role || "")
+  );
+
+  const handleProfileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => setAnchorEl(null);
-  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
+  const renderMenuItems = () =>
+    filteredMenu.map((item) => (
+      <Box
+        key={item.label}
+        onClick={() => navigate(item.path)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mx: 2,
+          cursor: "pointer",
+          color: location.pathname === item.path ? "primary.main" : "inherit",
+          fontWeight: location.pathname === item.path ? "bold" : "normal",
+        }}
+      >
+        {item.icon}
+        <Typography sx={{ ml: 1 }}>{item.label}</Typography>
+      </Box>
+    ));
 
   return (
-    <AppBar
-      position="static"
-      color="default"
-      sx={{ boxShadow: "none", borderBottom: "1px solid #ccc" }}
-    >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* Left: Logo */}
-        <Typography
-          variant="h6"
-          component={Link}
-          to="/"
-          sx={{
-            fontWeight: "bold",
-            color: "primary.main",
-            textDecoration: "none",
-          }}
-        >
-          LOGO
-        </Typography>
+    <AppBar position="static" color="inherit" elevation={1}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Logo */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ backgroundColor: "black", borderRadius: 2, p: 1, mr: 1 }}>
+            <HomeIcon sx={{ color: "white" }} />
+          </Box>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: "bold", lineHeight: 1 }}>
+              StayEase
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Your Home Away From Home
+            </Typography>
+          </Box>
+        </Box>
 
-        {/* Nav Links (desktop only) */}
+        {/* Desktop Menu */}
         {!isMobile && (
-          <Box sx={{ display: "flex", gap: 2 }}>
-            {navLinks.map(({ text, path }) => (
-              <MuiLink
-                key={text}
-                component={Link}
-                to={path}
-                underline="none"
-                color="text.primary"
-                sx={{ fontSize: "1rem", fontWeight: 500 }}
-              >
-                {text}
-              </MuiLink>
-            ))}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {renderMenuItems()}
+            <IconButton onClick={handleProfileClick} sx={{ ml: 2 }}>
+              <Avatar src="/profile.jpg" />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Box>
         )}
 
-        {/* Middle: Search (hidden on mobile) */}
-        {!isMobile && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              bgcolor: "#f1f1f1",
-              px: 1,
-              borderRadius: 2,
-            }}
-          >
-            <SearchIcon />
-            <InputBase
-              placeholder="Search properties..."
-              sx={{ ml: 1, width: 200 }}
-            />
-          </Box>
-        )}
-
-        {/* Right: Hamburger (mobile only) OR SignIn/Avatar (desktop) */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {isMobile ? (
-            <IconButton onClick={toggleDrawer}>
+        {/* Mobile Menu */}
+        {isMobile && (
+          <>
+            <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon />
             </IconButton>
-          ) : isLoggedIn ? (
-            <>
-              <IconButton onClick={handleMenu}>
-                <Avatar alt="User" />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to="/login"
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
             >
-              Sign In
-            </Button>
-          )}
-        </Box>
+              <Box
+                sx={{ width: 250 }}
+                role="presentation"
+                onClick={() => setDrawerOpen(false)}
+              >
+                {/* <List>
+                  {filteredMenu.map((item) => (
+                    <ListItem
+                      key={item.label}
+                      onClick={() => navigate(item.path)}
+                      selected={location.pathname === item.path}
+                    >
+                      <item.icon.type sx={{ mr: 1 }} />
+                      <ListItemText primary={item.label} />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    onClick={() => navigate("/profile")}
+                    selected={location.pathname === "/profile"}
+                  >
+                    <ListItemText primary="Profile" />
+                  </ListItem>
+                  <ListItem onClick={handleLogout}>
+                    <ListItemText primary="Logout" />
+                  </ListItem>
+                </List> */}
+                <List>
+                  {filteredMenu.map((item) => (
+                    <ListItemButton
+                      key={item.label}
+                      onClick={() => navigate(item.path)}
+                      selected={location.pathname === item.path}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <item.icon.type sx={{ mr: 1 }} />
+                        <ListItemText primary={item.label} />
+                      </Box>
+                    </ListItemButton>
+                  ))}
+                  <ListItemButton
+                    onClick={() => navigate("/profile")}
+                    selected={location.pathname === "/profile"}
+                  >
+                    <ListItemText primary="Profile" />
+                  </ListItemButton>
+                  <ListItemButton onClick={handleLogout}>
+                    <ListItemText primary="Logout" />
+                  </ListItemButton>
+                </List>
+              </Box>
+            </Drawer>
+          </>
+        )}
       </Toolbar>
-
-      {/* Drawer for Mobile */}
-      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-        <List sx={{ width: 220 }} onClick={toggleDrawer}>
-          {navLinks.map(({ text, path }) => (
-            <ListItem component={Link} to={path} key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-          {isLoggedIn ? (
-            <>
-              <ListItem>
-                <ListItemText primary="Profile" />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Logout" />
-              </ListItem>
-            </>
-          ) : (
-            <ListItem component={Link} to="/login">
-              <ListItemText primary="Sign In" />
-            </ListItem>
-          )}
-        </List>
-      </Drawer>
     </AppBar>
   );
 };

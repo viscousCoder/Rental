@@ -49,7 +49,7 @@ export const userSlice = createSlice({
         state.error = "";
       })
       .addCase(registerUser.fulfilled, (state) => {
-        state.loading = true;
+        state.loading = false;
         state.user = {};
         state.error = "";
       })
@@ -65,7 +65,7 @@ export const userSlice = createSlice({
         state.error = "";
       })
       .addCase(loginUser.fulfilled, (state) => {
-        state.loading = true;
+        state.loading = false;
         state.user = {};
         state.error = "";
       })
@@ -81,7 +81,7 @@ export const userSlice = createSlice({
         state.error = "";
       })
       .addCase(getDetails.fulfilled, (state, action) => {
-        state.loading = true;
+        state.loading = false;
         state.user = action.payload;
         state.error = "";
       })
