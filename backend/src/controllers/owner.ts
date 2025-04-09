@@ -289,6 +289,34 @@ export async function handleCreateProperty(
   }
 }
 
+// export async function handleGetCurrentOwnerProperty(
+//   req: AuthenticatedRequest,
+//   res: Response
+// ): Promise<void> {
+//   try {
+//     const AppDataSource = await getConnection();
+//     const propertyRepository = AppDataSource.getRepository(Property);
+
+//     const userId = req.user?.id;
+
+//     if (!userId) {
+//       res.status(401).json({ message: "Unauthorized" });
+//       return;
+//     }
+
+//     const userProperties = await propertyRepository.find({
+//       where: { user: { id: userId } },
+//       relations: ["user", "amenities", "images"],
+//       order: { created_at: "DESC" },
+//     });
+
+//     res.status(200).json({ success: true, data: userProperties });
+//   } catch (error) {
+//     console.error("Error fetching user properties:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// }
+
 export async function handleGetCurrentOwnerProperty(
   req: AuthenticatedRequest,
   res: Response
@@ -298,21 +326,33 @@ export async function handleGetCurrentOwnerProperty(
     const propertyRepository = AppDataSource.getRepository(Property);
 
     const userId = req.user?.id;
+    const userRole = req.user?.userrole;
 
-    if (!userId) {
+    if (!userId || !userRole) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
-    const userProperties = await propertyRepository.find({
-      where: { user: { id: userId } },
-      relations: ["user", "amenities", "images"],
-      order: { created_at: "DESC" },
-    });
+    let properties;
 
-    res.status(200).json({ success: true, data: userProperties });
+    if (userRole === "Admin") {
+      // Admin: fetch all properties
+      properties = await propertyRepository.find({
+        relations: ["user", "amenities", "images"],
+        order: { created_at: "DESC" },
+      });
+    } else {
+      // Non-admin: fetch only current user's properties
+      properties = await propertyRepository.find({
+        where: { user: { id: userId } },
+        relations: ["user", "amenities", "images"],
+        order: { created_at: "DESC" },
+      });
+    }
+
+    res.status(200).json({ success: true, data: properties });
   } catch (error) {
-    console.error("Error fetching user properties:", error);
+    console.error("Error fetching properties:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }

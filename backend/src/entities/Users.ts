@@ -29,6 +29,9 @@ export class Users {
   @Column({ nullable: false })
   userrole!: string;
 
+  @Column({ nullable: false, default: false })
+  blocked!: boolean;
+
   @OneToMany(() => Property, (property) => property.user)
   properties!: Property[];
 

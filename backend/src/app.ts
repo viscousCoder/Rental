@@ -5,6 +5,7 @@ import { getConnection } from "./database/db.config";
 import authRouter from "./routes/auth";
 import ownerRoute from "./routes/owner";
 import paymentRoute from "./routes/payment";
+import adminRouter from "./routes/admin";
 import {
   handleAuthentication,
   handleAuthorization,
@@ -33,7 +34,8 @@ async function init() {
 
     //routes
     app.use("/", authRouter);
-    app.use("/", handleAuthorization(["Property Owner"]), ownerRoute);
+    app.use("/", adminRouter);
+    app.use("/", handleAuthorization(["Property Owner", "Admin"]), ownerRoute);
     app.listen(port, () => console.log("Server is running at port ", port));
   } catch (error) {
     console.log(`Error while connection ${error}`);

@@ -23,7 +23,6 @@ import Loading from "../Loading/Loading";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
-import { getCurrentOwnerProperties } from "../../store/ownerProperty";
 
 // Random rating and review helper
 const getRandomRating = () => {
@@ -58,7 +57,8 @@ const PGList: React.FC = () => {
   useEffect(() => {
     dispatch(getDetails());
     dispatch(getAllProperties());
-    dispatch(getCurrentOwnerProperties());
+    // dispatch(getCurrentOwnerProperties());
+    // dispatch(fetchUsersByRole({ userrole: "Property Owner" }));
     localStorage.removeItem("data");
   }, []);
 
